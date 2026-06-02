@@ -10,10 +10,14 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "license": "Apache-2.0",
   "author": "Edward Cheng",
   "devDependencies": {
+    "@types/web-bluetooth": "^0.0.21",
     "esbuild": "^0.21.0",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0"

@@ -37,7 +37,7 @@ export class WebBleTransport implements Transport {
     for (let i = 0; i < framed.length; i += this.maxPacketSize) {
       const slice = framed.subarray(i, Math.min(i + this.maxPacketSize, framed.length));
       // writeValueWithoutResponse preferred; pacing may be needed for throughput.
-      await this.rx.writeValueWithoutResponse(slice);
+      await this.rx.writeValueWithoutResponse(new Uint8Array(slice));
     }
   }
 

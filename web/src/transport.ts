@@ -10,5 +10,6 @@ export interface Transport {
   write(framed: Uint8Array): Promise<void>;
   // Register a callback for raw inbound notification bytes (un-reassembled).
   onReceive(cb: (bytes: Uint8Array) => void): void;
-  readonly maxPacketSize: number;
+  // Updated by SpikeClient after InfoResponse is parsed.
+  maxPacketSize: number;
 }
