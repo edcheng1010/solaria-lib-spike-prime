@@ -1,0 +1,21 @@
+{
+  "name": "@solaria/spike-prime",
+  "version": "0.1.0-alpha.0",
+  "description": "TypeScript SSP client for LEGO SPIKE Prime over Web Bluetooth — Solaria platform",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && esbuild src/index.ts --bundle --format=esm --outfile=dist/bundle.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": ["dist", "src"],
+  "license": "Apache-2.0",
+  "author": "Edward Cheng",
+  "devDependencies": {
+    "esbuild": "^0.21.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}
