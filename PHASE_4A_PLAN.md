@@ -1,7 +1,25 @@
 # Phase 4a — Scratch Extension for LEGO® SPIKE™ Prime (via SSP)
 
-**Status:** Planning · **Target:** TurboWarp/PenguinMod first (Web Bluetooth), official-Scratch path kept open
+**Status:** Code-complete · **hardware test pending** · **Target:** TurboWarp/PenguinMod first (Web Bluetooth), official-Scratch path kept open
 **Depends on:** SSP v0.8 (`solaria-hub/spec/SSP-v0.8.md`), hub program `hub_controller.py` (this repo)
+
+## Progress (2026-06-03)
+
+| Step | State | Notes |
+|------|-------|-------|
+| 4a.0 SSP client contract | ✅ done | `spec/SSP-CLIENT-v0.8.md` |
+| 4a.1 JS protocol core | ✅ done | `cobs/framing/crc32/messages/uploader/ssp` ported; **cobs unit-tested 29/29** |
+| 4a.2 Transport abstraction | ✅ done | `transport.ts` + `transport-webble.ts`; typecheck clean |
+| 4a.3 Client orchestration | ✅ done | `client.ts` — InfoResponse, hash fast-path, upload, capability, heartbeat, `on/off` |
+| 4a.4 Scratch extension | ✅ done | `solaria-scratch-spike-prime/src/extension.js`, all 8 components; commands verified against the App Inventor reference client |
+| 4a.5 Packaging | ◑ partial | esbuild bundle builds; **GitHub Pages hosting not yet set up** (load via raw URL meanwhile) |
+| 4a.6 Parity verification | ⏳ pending | needs a physical hub — checklist below |
+
+**Reporter model — changed from the original plan.** Reporters/booleans use **request→await→resolve**
+(send the `sensor.read`/`system.read`, await the matching event via `SpikeClient.off`, return the value as
+a Promise — TurboWarp awaits it) rather than the request→cache pattern. This gives fresh values with no
+subscribe-first requirement and no documented one-tick latency. Subscriptions remain only for the hat
+blocks (button pressed/released, color/distance change).
 
 ## Context
 
@@ -84,9 +102,37 @@ App Inventor components, same LEGO-aligned names. Block-type mapping:
 - README: how to load (TurboWarp → Add Extension → URL), Chrome/Edge requirement, connect flow.
 - Host the built extension (GitHub Pages) for URL loading.
 
-### 4a.6 — Parity verification
-Run the Phase 3 hardware checklist (motors, movement, light, sensors, sound, music, system) through the
-Scratch blocks against a real hub. Confirm block names/behaviour match the App Inventor surface.
+### 4a.6 — Parity verification  ⏳ NEXT (needs a physical hub)
+
+Load the extension in **Chrome/Edge** → TurboWarp → Add Extension → Custom Extension → URL:
+`https://raw.githubusercontent.com/edcheng1010/solaria-scratch-spike-prime/main/extension.js`
+Click the **connect to SPIKE Prime** block (the click is the required Web Bluetooth user gesture), pick the
+hub, wait for the program to auto-upload (~5–10 s on first connect). Then walk this smoke checklist:
+
+| # | Test | Block | Expected |
+|---|------|-------|----------|
+| W1 | Connect | `connect to SPIKE Prime` | pairing dialog → hub program uploads → `connected?` true |
+| W2 | Motor run/stop | `start motor A clockwise at 50%` → wait → `stop motor A brake` | spins then brakes |
+| W3 | Motor timed | `run motor A clockwise at 75% for 360 degrees` | one revolution |
+| W4 | Reporter | `motor A position` | returns a number |
+| W5 | Movement | `set movement motors E F` → `start moving at 40%` → `stop moving` | drives then stops |
+| W6 | Move degrees | `move 360 degrees at 40%` | drives a fixed arc |
+| W7 | Light image | `show image HAPPY` / `turn off light matrix` | matrix on/off |
+| W8 | Center light | `set center button light to red` | hub button glows red |
+| W9 | Color read | `color at C` (with a colour under the sensor) | returns the colour name |
+| W10 | Distance read | `distance at B` | returns mm |
+| W11 | Boolean | `color at C is red?` / `distance at B closer than 100 mm?` | true/false correctly |
+| W12 | Tilt | `hub tilt angle pitch`; tilt the hub | angle tracks tilt |
+| W13 | Button hat | `subscribe to hub Left button` + `when hub Left button pressed` | hat fires on press |
+| W14 | Sound | `beep at 440 Hz for 500 ms` | audible beep |
+| W15 | Music | `set tempo 120` + a few `play note … for 1 beats` | notes sequence in time |
+| W16 | System | `hub battery (%)`, `hub temperature`, `hub charging?` | plausible values |
+| W17 | Timer | `reset hub timer` → wait → `hub timer (seconds)` | counts up |
+| W18 | Disconnect | `disconnect from hub` | `connected?` false |
+
+Log any block whose hub command differs from the App Inventor behaviour. The COBS framing layer is already
+unit-tested, so first-session failures are most likely in: the Web Bluetooth connect/notify path, write
+pacing/MTU, or the upload sequence — not the protocol encoding.
 
 ## Risks
 - **Web Bluetooth user gesture** — `requestDevice()` must run from a user gesture. Scratch block clicks in
