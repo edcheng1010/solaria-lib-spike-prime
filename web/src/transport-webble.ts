@@ -8,6 +8,7 @@ export const TX_UUID = "0000fd02-0002-1000-8000-00805f9b34fb"; // notify (hub→
 
 export class WebBleTransport implements Transport {
   maxPacketSize = 20; // raised after InfoResponse
+  private gatt?: BluetoothRemoteGATTServer;
   private rx?: BluetoothRemoteGATTCharacteristic;
   private tx?: BluetoothRemoteGATTCharacteristic;
   private rxCb?: (b: Uint8Array) => void;
@@ -18,6 +19,7 @@ export class WebBleTransport implements Transport {
       filters: [{ services: [SERVICE_UUID] }],
     });
     const gatt = await dev.gatt!.connect();
+    this.gatt = gatt;
     const svc = await gatt.getPrimaryService(SERVICE_UUID);
     this.rx = await svc.getCharacteristic(RX_UUID);
     this.tx = await svc.getCharacteristic(TX_UUID);
@@ -29,7 +31,10 @@ export class WebBleTransport implements Transport {
   }
 
   async disconnect(): Promise<void> {
-    // TODO: track device.gatt and disconnect
+    try { this.gatt?.disconnect(); } catch { /* ignore */ }
+    this.gatt = undefined;
+    this.rx   = undefined;
+    this.tx   = undefined;
   }
 
   async write(framed: Uint8Array): Promise<void> {
