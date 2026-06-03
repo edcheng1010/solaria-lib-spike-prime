@@ -1,0 +1,22 @@
+solaria-lib-spike-prime — SSP TypeScript client for LEGO SPIKE Prime
+Copyright 2026 Edward Cheng
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+---
+
+Trademark Notices:
+
+"LEGO®" and "SPIKE™" are trademarks of the LEGO Group.
+"App Inventor" is a trademark of the Massachusetts Institute of Technology.
+"Scratch™" is a trademark of the MIT Media Lab.
+"Bluetooth®" is a registered trademark of Bluetooth SIG, Inc.
+"TypeScript" is a trademark of Microsoft Corporation.
+
+This project is not affiliated with, endorsed by, or sponsored by any of
+the above organisations. Hardware platform names and programming environment
+names are used solely to describe compatibility and interoperability.
