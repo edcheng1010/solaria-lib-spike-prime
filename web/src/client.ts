@@ -81,6 +81,10 @@ export class SpikeClient {
   }
 
   on(cb: (e: ClientEvent) => void) { this.listeners.push(cb); }
+  off(cb: (e: ClientEvent) => void) {
+    const i = this.listeners.indexOf(cb);
+    if (i >= 0) this.listeners.splice(i, 1);
+  }
 
   // Full connect lifecycle. MUST be called from a user gesture (Web Bluetooth).
   async connect(): Promise<void> {
