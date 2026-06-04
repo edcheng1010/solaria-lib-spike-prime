@@ -69,6 +69,12 @@ export class SpikeClient {
   private lastPong    = 0;
   private heartbeat?: ReturnType<typeof setInterval>;
 
+  // Disconnect guard — prevents double-emit if heartbeat timeout and transport drop race
+  private disconnected = true; // starts true; flipped false at connect(), true at emitDisconnected()
+
+  // Debug logging (mirrors App Inventor's DebugMode property)
+  private debug = false;
+
   // Device identity (set after BLE pairing — used for hash cache key)
   private deviceId    = "unknown";
   private programHash: string;
@@ -86,9 +92,16 @@ export class SpikeClient {
     if (i >= 0) this.listeners.splice(i, 1);
   }
 
+  /** Toggle verbose console.debug output (mirrors App Inventor DebugMode). */
+  setDebug(enabled: boolean): void { this.debug = enabled; }
+
   // Full connect lifecycle. MUST be called from a user gesture (Web Bluetooth).
   async connect(): Promise<void> {
+    this.disconnected = false;
     this.transport.onReceive((b) => this.onBytes(b));
+    // Wire transport-level drop detection (e.g. gattserverdisconnected) so an
+    // unexpected physical drop fires disconnected("connection_lost") immediately.
+    this.transport.onDisconnect?.(() => this.emitDisconnected("connection_lost"));
     await this.transport.connect();
 
     // ── 1. InfoRequest → InfoResponse ──────────────────────────────────────
@@ -156,7 +169,7 @@ export class SpikeClient {
   async disconnect(): Promise<void> {
     this.stopHeartbeat();
     await this.transport.disconnect();
-    this.emit({ type: "disconnected", reason: "user" });
+    this.emitDisconnected("user");
   }
 
   // ─── RX reassembly ──────────────────────────────────────────────────────────
@@ -228,7 +241,7 @@ export class SpikeClient {
       this.sendSSP({ cmd: "system.ping" }).catch(() => {});
       if (performance.now() - this.lastPong > PONG_TIMEOUT_MS) {
         this.stopHeartbeat();
-        this.emit({ type: "disconnected", reason: "heartbeat_lost" });
+        this.emitDisconnected("heartbeat_lost");
       }
     }, HEARTBEAT_MS);
   }
@@ -283,5 +296,16 @@ export class SpikeClient {
 
   // ─── Internal helpers ────────────────────────────────────────────────────────
   private emit(e: ClientEvent): void { this.listeners.forEach((l) => l(e)); }
-  private log(msg: string): void { console.debug("[SpikeClient]", msg); }
+
+  /** Single exit point for all disconnect paths — guards against double-emit. */
+  private emitDisconnected(reason: string): void {
+    if (this.disconnected) return;
+    this.disconnected = true;
+    this.stopHeartbeat();
+    this.emit({ type: "disconnected", reason });
+  }
+
+  private log(msg: string): void {
+    if (this.debug) console.debug("[SpikeClient]", msg);
+  }
 }

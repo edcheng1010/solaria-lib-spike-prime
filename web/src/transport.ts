@@ -10,6 +10,10 @@ export interface Transport {
   write(framed: Uint8Array): Promise<void>;
   // Register a callback for raw inbound notification bytes (un-reassembled).
   onReceive(cb: (bytes: Uint8Array) => void): void;
+  // Optional: register a callback fired when the transport detects an unexpected
+  // physical drop (e.g. gattserverdisconnected). SpikeClient uses this to emit
+  // disconnected("connection_lost") immediately rather than waiting for heartbeat timeout.
+  onDisconnect?(cb: () => void): void;
   // Updated by SpikeClient after InfoResponse is parsed.
   maxPacketSize: number;
 }
