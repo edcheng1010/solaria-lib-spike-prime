@@ -20,7 +20,7 @@ TypeScript SSP client for LEGO® SPIKE™ Prime over **Web Bluetooth**. Powers t
 ## Remaining work (see ../PHASE_4A_PLAN.md)
 1. Port `cobs.ts` encode/decode (the only un-ported algorithm).
 2. Wire `client.ts`: InfoResponse parse → upload (await acks) → capability → heartbeat.
-3. Vitest vectors from `appinventor-lego-spike-prime-extension/docs/deep_analysis/04_cobs_test_vectors.md`.
+3. Vitest vectors from `solaria-appinventor-spike-prime/docs/deep_analysis/04_cobs_test_vectors.md`.
 4. `esbuild` bundle for the Scratch extension.
 
 ## Browser support

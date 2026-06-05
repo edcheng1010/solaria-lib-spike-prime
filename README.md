@@ -26,4 +26,4 @@ Language-agnostic protocol library for the LEGO® SPIKE™ Prime BLE bridge, par
 ## Status
 
 Phase 4a (Scratch via Web Bluetooth) — see [`PHASE_4A_PLAN.md`](PHASE_4A_PLAN.md). Protocol stack is being
-ported from the verified Java implementation in `appinventor-lego-spike-prime-extension`.
+ported from the verified Java implementation in `solaria-appinventor-spike-prime`.
