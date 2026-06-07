@@ -1,7 +1,8 @@
 # solaria-lib-spike-prime
 
-Language-agnostic protocol library for the LEGO® SPIKE™ Prime BLE bridge, part of the
-[Solaria](https://github.com/edcheng1010/solaria-hub) open-source robotics platform.
+The shared protocol library for LEGO® SPIKE™ Prime integration in the [Solaria](https://github.com/edcheng1010/solaria-hub) open-source robotics ecosystem.
+
+This library is the **infrastructure layer** that multiple Solaria client extensions share. It contains the canonical hub-side program, the SSP client implementation (TypeScript/Web), and the shared specification that governs how any Solaria client communicates with a SPIKE Prime hub. Client extensions (App Inventor, Scratch, and future platforms) each have their own blocks and interaction patterns; this library ensures they all speak the same protocol to the hardware.
 
 > **Unofficial integration.** Independent open-source project, not affiliated with, endorsed by, or
 > sponsored by the LEGO Group, the Micro:bit Educational Foundation, or MIT. Trademarks belong to their
@@ -19,11 +20,14 @@ Language-agnostic protocol library for the LEGO® SPIKE™ Prime BLE bridge, par
 
 ## Clients that consume this library
 
-- **App Inventor** (`.aix`) — shipped (currently embeds its own copy of the hub program + Java stack)
-- **Scratch** (`solaria-scratch-spike-prime`) — Phase 4a, consumes `web/`
-- **Web/JS, Python** — later phases
+- **App Inventor** (`.aix`) — ✅ Shipped. Currently embeds its own copy of the hub program and Java stack; a future Gen 2 Epic will extract the shared library properly.
+- **Scratch/TurboWarp** (`solaria-scratch-spike-prime`) — ✅ Supported. Consumes `web/` (TypeScript SSP client). Works on physical SPIKE Prime hubs.
+- **Web/JS, Python** — Planned in Gen 2. Will consume `web/` and a future `python/` sub-package respectively.
+
+Each client has its own blocks and interaction model (App Inventor is stateful/component-based; Scratch is event-driven/sequential). This library ensures they all communicate with the hardware through the same SSP wire protocol, so the robot capabilities are consistent across clients.
 
 ## Status
 
-Phase 4a (Scratch via Web Bluetooth) — see [`PHASE_4A_PLAN.md`](PHASE_4A_PLAN.md). Protocol stack is being
-ported from the verified Java implementation in `solaria-appinventor-spike-prime`.
+The TypeScript/Web SSP client (`web/`) is implemented and hardware-tested via the Scratch extension. The canonical hub program (`hub/hub_controller.py`) is stable at SSP v0.8.
+
+**Current work (Gen 2):** Extracting the shared protocol stack from the App Inventor extension into this library so all clients share a single source of truth. See the [Solaria Hub Roadmap](https://github.com/edcheng1010/solaria-hub/blob/main/ROADMAP.md) for full status.
