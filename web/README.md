@@ -17,7 +17,7 @@ TypeScript SSP client for LEGO® SPIKE™ Prime over **Web Bluetooth**. Powers t
 | `transport-webble.ts` | Web Bluetooth transport | 🟨 connect/write done, disconnect TODO |
 | `client.ts` | connection lifecycle orchestrator | 🟨 skeleton; InfoResponse/upload/heartbeat TODO |
 
-## Remaining work (see ../PHASE_4A_PLAN.md)
+## Remaining work (see ../EPIC_SPIKE_4A_PLAN.md)
 1. Port `cobs.ts` encode/decode (the only un-ported algorithm).
 2. Wire `client.ts`: InfoResponse parse → upload (await acks) → capability → heartbeat.
 3. Vitest vectors from `solaria-appinventor-spike-prime/docs/deep_analysis/04_cobs_test_vectors.md`.

@@ -1,4 +1,4 @@
-# Phase 4a — Scratch Extension for LEGO® SPIKE™ Prime (via SSP)
+# Epic SPIKE-4a — Scratch Extension for LEGO® SPIKE™ Prime (via SSP)
 
 **Status:** Code-complete · **hardware test pending** · **Target:** TurboWarp/PenguinMod first (Web Bluetooth), official-Scratch path kept open
 **Depends on:** SSP v0.8 (`solaria-hub/spec/SSP-v0.8.md`), hub program `hub_controller.py` (this repo)
@@ -23,7 +23,7 @@ blocks (button pressed/released, color/distance change).
 
 ## Context
 
-App Inventor is the shipped client. Phase 4a brings the **second frontend — Scratch** — by reimplementing
+App Inventor is the shipped client. Epic SPIKE-4a brings the **second frontend — Scratch** — by reimplementing
 the SSP client stack in TypeScript/JS and wrapping it as a Scratch 3.0 extension. The hub side
 (`hub_controller.py`, SSP v0.8) is unchanged and remains the single source of truth.
 
