@@ -1,5 +1,7 @@
 # Epic SPIKE-4a — Scratch Extension for LEGO® SPIKE™ Prime (via SSP)
 
+> This document uses "Epic SPIKE-4a" (formerly "Phase 4a") to describe this milestone. See [solaria-hub ROADMAP](https://github.com/edcheng1010/solaria-hub/blob/main/ROADMAP.md) for the distinction between repo-internal Epics and ecosystem-wide Generations.
+
 **Status:** Code-complete · **hardware test pending** · **Target:** TurboWarp/PenguinMod first (Web Bluetooth), official-Scratch path kept open
 **Depends on:** SSP v0.8 (`solaria-hub/spec/SSP-v0.8.md`), hub program `hub_controller.py` (this repo)
 
